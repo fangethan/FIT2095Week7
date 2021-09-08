@@ -34,33 +34,14 @@ module.exports = {
 
     // Delete an actor and all its movies
     deleteActorMovie: function (req, res) {
-
-        Movie.find({ actors: req.params.actorid }, function (err, doc) {
-            for (let i = 0; i < doc.length; i++) {
-                for (let j = 0; j < doc[i].actors.length; j++) {
-                    console.log('First test: ' + doc[i].actors);
-                    // console.log(req.params.actorid);
-                    if (req.params.actorid == doc[i].actors[j]) {
-                        Movie.findOne({ actors: req.params.actorid }, function (err, movie) {
-                            console.log('match for ' + doc[i].title);
-                            console.log('Second test: ' + movie.actors)
-                            movie.actors.remove(movie.actors);
-                            console.log('Third test: ' + movie.actors)
-                            movie.save(function (err) {
-                                if (err) return res.status(500).json(err);
-                            });
-                        });
-                    } else {
-                        console.log('no match')
-                    }
-                }
-            }
+        Movie.deleteMany({ actors: req.params.actorid }, function (err, doc) {
+            console.log(doc)
         });
 
         Actor.findOneAndRemove({ _id: req.params.actorid }, function (err, actor) {
             actor.save(function (err) {
                 if (err) return res.status(500).json(err);
-                res.json(doc);
+                res.json(actor);
             });
         });
     },
